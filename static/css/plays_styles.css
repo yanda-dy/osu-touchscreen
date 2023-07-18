@@ -1,0 +1,47 @@
+.page-title {
+  color: white;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.detail-line.player {
+  font-size: 15px;
+}
+
+.player-country-image {
+  width: 25px;
+  vertical-align: middle;
+  padding-right: 2px;
+  padding-bottom: 3px;
+}
+
+.search-tools {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.form-inline {
+  display: flex;
+  align-items: center;
+}
+
+.form-group {
+  display: flex;
+  gap: 10px;
+}
+
+.form-control {
+  background-color: var(--bg-plays);
+  color: #fff;
+}
+
+.btn-primary {
+  background-color: var(--bg-main);
+  color: #fff;
+}
+
+.form-control:focus {
+  background-color: var(--form-focus) !important;
+  color: #fff !important;
+}

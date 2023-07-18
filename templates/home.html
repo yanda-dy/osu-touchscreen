@@ -1,0 +1,34 @@
+<!-- home.html -->
+{% extends "base.html" %}
+
+{% block title %}tdb • osu! touchscreen database{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <!-- Add the following code to display the flash message -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form action="/search" method="get">
+            <div class="form-group">
+                <select class="form-control dropdown" name="search_type">
+                    <option value="username" {% if search_type == 'username' %}selected{% endif %}>Username</option>
+                    <option value="userid" {% if search_type == 'userid' %}selected{% endif %}>User ID</option>
+                    <option value="beatmapid" {% if search_type == 'beatmapid' %}selected{% endif %}>Beatmap ID</option>
+                    <!-- Add more options for different search types -->
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="query" placeholder="Enter your search query" value="{{ query }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

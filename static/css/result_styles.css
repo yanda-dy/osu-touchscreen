@@ -1,0 +1,428 @@
+body {
+  background-color: var(--bg-plays);
+  font-family: Numeral, Comfortaa;
+}
+
+@font-face {
+  font-family: 'Numeral';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/varelaround/v20/w8gdH283Tvk__Lua32TysjIfp8uP.woff2) format('woff2');
+  unicode-range: U+30-39;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
+}
+
+a.no-underline:hover {
+  text-decoration: none;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.index {
+  position: relative;
+  left: -25px;
+  font-size: 24px;
+  width: 0%;
+  color: white;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.avatar-container {
+  display: flex;
+  padding-bottom: 20px;
+  margin-left: 20px;
+}
+
+.player-avatar {
+  height: 140px;
+  vertical-align: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 30px;
+}
+
+.player-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: white;
+  padding-left: 10px;
+}
+
+.player-country-image {
+  width: 40px;
+  vertical-align: middle;
+  padding-right: 5px;
+}
+
+.username-title {
+  font-size: 24px;
+  padding-bottom: 3px;
+}
+
+.username-title:hover {
+  color: white;
+}
+
+.country-name {
+  font-size: 14px;
+  padding-bottom: 20px;
+}
+
+.global-ranking-description {
+  font-size: 12px;
+  line-height: 0.5;
+  font-weight: bold;
+}
+
+.global-ranking-value {
+  font-size: 28px;
+  color: var(--global-rank);
+  padding-top: 3px;
+}
+
+.play-detail {
+  display: flex;
+  position: relative;
+  width: 95%;
+  align-items: center;
+  background-color: var(--play-detail);
+  border-radius: 15px;
+  margin-right: 0px;
+  margin-bottom: 3px;
+  padding-top: 2px;
+  padding-right: 0px;
+  font-size: 12px;
+}
+
+.detail-section {
+  color: #fff;
+  margin: 5px 10px;
+}
+
+.play-detail:hover {
+  background-color: var(--play-detail-hover);
+}
+
+.rank {
+  width: 80px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rank img {
+  display: block;
+  width: 100px;
+  height: auto;
+  padding-left: 15px;
+}
+
+.detail {
+  flex-grow: 1;
+}
+
+.detail-section.detail {
+  padding-left: 0px;
+  padding-bottom: 5px;
+  width: 50%;
+}
+
+.detail-line {
+  margin: 3px 0px;
+}
+
+.detail-line.beatmap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-line .title {
+  font-size: 14px;
+}
+
+.detail-line.artist {
+  font-size: 13px;
+}
+
+.detail-line .purple {
+  color: rgb(183, 177, 229);
+}
+
+.detail-line.stats {
+  font-size: 13px;
+  font-weight: bold;
+  padding-bottom: 2px;
+}
+
+.detail-line.diff {
+  font-size: 13px;
+  font-weight: normal;
+  color: #ea0;
+}
+
+.relative-time {
+  padding-left: 15px;
+  color: var(--relative-time);
+  position: relative;
+}
+
+.relative-time::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 7px 20px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.relative-time:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.detail-section.accuracy {
+  font-weight: bold;
+  color: #fc2;
+  display: inline-block;
+  font-size: 14px;
+  padding-left: 5px;
+  width: 4%;
+  text-align: left;
+}
+
+.detail-section.mods {
+  display: flex;
+}
+
+.mod {
+  height: 30px;
+  width: calc(30px*45/32);
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  display: flex;
+  position: relative;
+}
+
+.mod::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 7px 20px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.mod:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mod--NF {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_no-fail.png);
+}
+
+.mod--EZ {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_easy.png);
+}
+
+.mod--TD {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_touchdevice%402x.png);
+}
+
+.mod--HD {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_hidden.png);
+}
+
+.mod--HR {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_hard-rock.png);
+}
+
+.mod--SD {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_sudden-death.png);
+}
+
+.mod--DT {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_double-time.png);
+}
+
+.mod--RX {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_relax.png);
+}
+
+.mod--HT {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_half.png);
+}
+
+.mod--NC {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_nightcore.png);
+}
+
+.mod--FL {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_flashlight.png);
+}
+
+.mod--AT {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_auto.png);
+}
+
+.mod--SO {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_spun-out.png);
+}
+
+.mod--AP {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_autopilot.png);
+}
+
+.mod--PF {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_perfect.png);
+}
+
+.mod--V2 {
+  background-image: url(https://raw.githubusercontent.com/ppy/osu-web/master/public/images/badges/mods/mod_v2.png);
+}
+
+.detail-section.pp {
+  width: 10%;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.pp_value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pp-value);
+}
+
+.pp_unit {
+  font-size: 12px;
+  color: var(--pp-unit);
+}
+
+.pp_loved {
+  font-size: 20px;
+  color: var(--pp-value);
+}
+
+.pp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.pp::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 7px 20px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.pp:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu-btn {
+  position: absolute;
+  z-index: 727;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%) translateX(100%);
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  padding: 10px;
+}
+
+.menu-options {
+  position: absolute;
+  top: 50%;
+  right: -80px;
+  transform: translateY(60%) translateX(-60%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+  z-index: -1;
+}
+
+.menu-option {
+  display: block;
+  padding: 5px;
+  padding-left: 30px;
+  padding-right: 50px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 5px;
+}
+
+.menu-option::before {
+  content: "";
+  position: fixed;
+  top: 33%;
+  left: 15px;
+  width: 4px;
+  height: 33%;
+  background-color: #f05198;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.menu-option:hover::before {
+  opacity: 1;
+}
+
+.menu-option:hover {
+  background-color: var(--menu-hover);
+}

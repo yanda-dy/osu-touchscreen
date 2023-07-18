@@ -1,0 +1,194 @@
+<!-- beatmap_search.html -->
+{% extends "base.html" %}
+
+{% block title %}beatmap listing | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/beatmapsearch_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="search-container">
+    <div class="search-title">
+        <img src="https://osu.ppy.sh/assets/images/beatmapsets.d82379a6.svg" class="beatmap-listing-image">
+        beatmap listing
+    </div>
+    <div class="search-box" {% if results|length > 0 %} style="--search-box-bg: url('https://assets.ppy.sh/beatmaps/{{ results[0][0].beatmapset_id }}/covers/cover@2x.jpg');" {% endif %}>
+        <input type="text" class="search-input" placeholder="enter keywords" maxlength=100 id="search-box">
+        <i class="fas fa-search search-icon"></i>
+    </div>
+</div>
+
+<div class="sort-options">
+    <div class="sort-by">Sort by</div>
+    <button id="title" class="sort-button" data-text="Title" onclick="selectSortOption('title')">Title&nbsp;&nbsp;<i
+            class="fas fa-caret-up order-direction"></i></button>
+    <button id="artist" class="sort-button" data-text="Artist" onclick="selectSortOption('artist')">Artist&nbsp;&nbsp;<i
+            class="fas fa-caret-up order-direction"></i></button>
+    <button id="difficulty" class="sort-button" data-text="Difficulty" onclick="selectSortOption('difficulty')">
+        Difficulty&nbsp;&nbsp;<i class="fas fa-caret-up order-direction"></i></button>
+    <button id="ranked" class="sort-button" data-text="Ranked" onclick="selectSortOption('ranked')">Ranked&nbsp;&nbsp;<i
+            class="fas fa-caret-up order-direction"></i></button>
+    <button id="plays" class="sort-button" data-text="Plays" onclick="selectSortOption('plays')">Plays&nbsp;&nbsp;<i
+            class="fas fa-caret-up order-direction"></i></button>
+    <button id="favourites" class="sort-button" data-text="Favourites" onclick="selectSortOption('favourites')">Favourites&nbsp;&nbsp;<i
+            class="fas fa-caret-up order-direction"></i></button>
+</div>
+<div class="search-results">
+    <div class="row">
+        {% for beatmapset in results %}
+        <div class="col-md-6">
+            <div class="beatmapset-card-container" onclick="beatmapsetRedirect({{ beatmapset[-1].beatmap_id }})">
+                <div class="left-card"
+                     style="--left-card-url: url('https://assets.ppy.sh/beatmaps/{{ beatmapset[0].beatmapset_id }}/covers/list@2x.jpg');"></div>
+                <div class="beatmapset-card"
+                     style="--beatmapset-card-url: url('https://assets.ppy.sh/beatmaps/{{ beatmapset[0].beatmapset_id }}/covers/card@2x.jpg');"
+                     onmouseenter="showBeatmapStats(this)" onmouseleave="hideBeatmapStats(this)">
+                    <div class="beatmapset-description">
+                        <div class="beatmapset-title">{{ beatmapset[0].song_name }}</div>
+                        <div class="beatmapset-artist">by {{ beatmapset[0].artist }}</div>
+                        <div class="beatmapset-mapper">mapped by <a
+                                href="https://osu.ppy.sh/users/{{ beatmapset[0].creator|urlencode }}"
+                                class="beatmapset-mapper-link">{{ beatmapset[0].creator }}</a>
+                        </div>
+                        <div class="beatmapset-stats">
+                            <span class="beatmapset-stats-section" data-title="Favourites: {{ beatmapset[0].favouritecount_str }}"><i class="fa-fw fas fa-heart beatmapset-stats-icon"></i> {{ beatmapset[0].favouritecount_str }}</span>
+                            <span class="beatmapset-stats-section" data-title="Playcount: {{ beatmapset[0].total_playcount_str }}"><i class="fa-fw fas fa-play-circle beatmapset-stats-icon"></i> {{ beatmapset[0].total_playcount_short }}</span>
+                            <span class="beatmapset-stats-section" data-title="{{ beatmapset[0].ranked_date_long }}"><i class="fa-solid fa-circle-check beatmapset-stats-icon"></i> {{ beatmapset[0].ranked_date_str }}</span>
+                        </div>
+                        <div class="difficulty-list">
+                            <div class="status-{{ beatmapset[0].status.split('.')[1].lower() }}">
+                                {{ beatmapset[0].status.split(".")[1] }}
+                            </div>
+                            <div class="beatmap-icon">
+                                <svg class="beatmap-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 1144 1144">
+                                    <path fill="currentColor"
+                                          d="M572.107 1143.489c-320.02 0-571.49-251.469-571.49-571.49S252.087.509 572.107.509c320.021 0 571.49 251.469 571.49 571.49s-251.469 571.49-571.49 571.49Zm0-1034.107c-245.526 0-462.618 194.218-462.618 462.617 0 237.048 192.324 462.617 462.618 462.617 272.568 0 462.617-217.751 462.617-462.617 0-261.76-201.634-462.617-462.617-462.617Zm0 754.363c-160.012 0-291.744-131.734-291.744-291.746 0-160.012 131.732-291.745 291.744-291.745 160.011 0 291.746 131.733 291.746 291.745S732.118 863.745 572.107 863.745Z"/>
+                                </svg>
+                            </div>
+                            {% if beatmapset|length > 25 %}
+                                <div class="beatmap-overflow">{{ beatmapset|length }}</div>
+                            {% else %}
+                                {% for beatmap in beatmapset %}
+                                    <div class="beatmap-option" style="--diff: {{ beatmap.colour }}">.</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function beatmapsetRedirect(beatmapID) {
+    const url = `/beatmap?search_type=beatmapid&query=${beatmapID}`;
+    window.open(url);
+}
+</script>
+
+<script>
+function showBeatmapStats(container) {
+    const beatmapStats = container.querySelector('.beatmapset-stats');
+    beatmapStats.style.opacity = 1;
+}
+
+function hideBeatmapStats(container) {
+    const beatmapStats = container.querySelector('.beatmapset-stats');
+    beatmapStats.style.opacity = 0;
+}
+</script>
+
+<script>
+let timeoutId;
+var debounceTimer;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-box');
+    const urlParams = new URLSearchParams(window.location.search);
+    var searchInputValue = urlParams.get('query');
+    var currentSortOption = urlParams.get('sort');
+    var sortDirection = urlParams.get('order');
+
+    if (searchInputValue && searchInputValue.length > 0) {
+        searchInput.value = decodeURIComponent(searchInputValue);
+        searchInput.focus();
+        searchInput.selectionStart = searchInput.value.length;
+        searchInput.selectionEnd = searchInput.value.length;
+    }
+    if (!sortDirection) sortDirection = "desc";
+    if (!currentSortOption) currentSortOption = "ranked";
+    document.getElementById(currentSortOption).classList.add("selected");
+    updateSortButton();
+});
+
+const searchInput = document.getElementById('search-box');
+searchInput.addEventListener('input', handleSearchInput);
+
+const urlParams = new URLSearchParams(window.location.search);
+var currentSortOption = urlParams.get('sort');
+var sortDirection = urlParams.get('order');
+
+function handleSearchInput() {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(sendSearchRequest, 700); // Debounce time set to 700 milliseconds
+}
+
+function selectSortOption(sortOption) {
+    if (currentSortOption === sortOption) {
+        toggleSortDirection();
+    } else {
+        currentSortOption = sortOption;
+        resetButtons();
+        document.getElementById(sortOption).classList.add("selected");
+        sortDirection = "asc";
+        toggleSortDirection();
+        handleSearchInput();
+    }
+}
+
+function toggleSortDirection() {
+    sortDirection = sortDirection === "desc" ? "asc" : "desc";
+    updateSortButton();
+    handleSearchInput();
+}
+
+function updateSortButton() {
+    var sortButton = document.getElementById(currentSortOption);
+    var iconElement = sortButton.getElementsByClassName("order-direction")[0];
+    iconElement.className = "fas " + (sortDirection === "asc" ? "fa-caret-up" : "fa-caret-down") + " order-direction";
+}
+
+function resetButtons() {
+    var buttons = document.getElementsByClassName("sort-button");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("selected");
+        var iconElement = buttons[i].getElementsByClassName("order-direction")[0];
+        iconElement.className = "fas fa-caret-up order-direction";
+    }
+}
+
+function sendSearchRequest() {
+    const searchInput = document.getElementById('search-box');
+    const searchQuery = sanitizeInput(searchInput.value.trim());
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('query', searchQuery);
+    urlParams.set('sort', currentSortOption);
+    urlParams.set('order', sortDirection);
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.location.href = newUrl;
+}
+
+function sanitizeInput(input) {
+    // Remove non-ASCII characters using regex
+    const sanitizedInput = input.replace(/[^\x00-\x7F]/g, '');
+
+    return sanitizedInput;
+}
+</script>
+
+{% endblock %}

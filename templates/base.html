@@ -1,0 +1,75 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/static/images/touchscreen-icon.png">
+    {% block style %}{% endblock %}
+    <!-- Add your custom CSS styles here -->
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-osu">
+        <div class="navbar-brand-container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="/static/images/touchscreen-icon.png" alt="touchscreen" class="navbar-logo">
+            </a>
+            <a class="navbar-brand" href="{{ url_for('index') }}" id="users-link">users</a>
+            <a class="navbar-brand" href="{{ url_for('beatmap') }}" id="beatmaps-link">beatmaps</a>
+            <a class="navbar-brand" href="/leaderboard/performance" id="performance-link">performance</a>
+            <a class="navbar-brand" href="/leaderboard/score" id="score-link">score</a>
+            <a class="navbar-brand" href="{{ url_for('plays') }}" id="plays-link">plays</a>
+            <a class="navbar-brand" href="{{ url_for('loved') }}" id="loved-link">loved</a>
+            <a class="navbar-brand" href="{{ url_for('update') }}" id="update-link">update</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('scroll', function() {
+            var navbar = document.querySelector('.navbar');
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > 0) {
+                navbar.classList.add('navbar-shrink');
+            } else {
+                navbar.classList.remove('navbar-shrink');
+            }
+        });
+    </script>
+    <script>
+        // Get the current URL path
+        var path = window.location.pathname;
+        var queryIndex = path.indexOf('?');
+        if (queryIndex !== -1) {
+            path = path.slice(0, queryIndex);
+        }
+
+        // Set the active link based on the current URL path
+        if (path === '/users') {
+            document.getElementById('users-link').classList.add('active-link');
+        } else if (path === '/leaderboard/performance') {
+            document.getElementById('performance-link').classList.add('active-link');
+        } else if (path === '/leaderboard/score') {
+            document.getElementById('score-link').classList.add('active-link');
+        } else if (path === '/plays') {
+            document.getElementById('plays-link').classList.add('active-link');
+        } else if (path === '/loved') {
+            document.getElementById('loved-link').classList.add('active-link');
+        } else if (path === '/beatmap' || path == '/beatmap/search') {
+            document.getElementById('beatmaps-link').classList.add('active-link');
+        } else if (path === '/update') {
+            document.getElementById('update-link').classList.add('active-link');
+        }
+    </script>
+</body>
+</html>

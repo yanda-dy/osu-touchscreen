@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/update_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <!-- Add the following code to display the flash message -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% if messages[0].startswith('Success') %}
+            <div class="alert alert-success">{{ messages[0] }}</div>
+            {% else %}
+            <div class="alert alert-danger">{{ messages[0] }}</div>
+            {% endif %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ request.path }}" method="get">
+            <div class="form-group">
+                <select class="form-control dropdown" name="action" id="action-type">
+                    <option value="reprocess_maps">Reprocess Maps</option>
+                    <option value="reprocess_users">Reprocess Users</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Execute Action</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+<!-- results.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ user_data.username }} • player info | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/result_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="avatar-container">
+    <img src="{{ user_data.avatar_url }}" class="player-avatar">
+    <div class="player-description">
+        <a href="https://osu.ppy.sh/users/{{ user_data.user_id }}" class="username-title">{{ user_data.username }}</a>
+        <div class="country-name"><img src="{{ user_data.country_image }}" class="player-country-image" data-title="{{ user_data.country_name }}"> {{ user_data.country_name }}</div>
+        <div class="global-ranking-description">Global Ranking</div>
+        <div class="global-ranking-value">{{ user_data.ranking }}</div>
+    </div>
+</div>
+
+<div class="container">
+    {% for result in results %}
+    <div class="play-detail">
+        <div class="index">{{ result.index }}</div>
+        <div class="detail-section rank">
+            <img src="{{ result.rank_link }}" alt="{{ result.rank }}">
+        </div>
+        <div class="detail-section detail">
+            <div class="detail-line beatmap">
+                <a href="/beatmap?search_type=beatmapid&query={{ result.beatmap_id }}"><span
+                        class="title">{{ result.map_name }}</span><span
+                        class="artist"> by {{ result.artist }}</span></a>
+            </div>
+            <div class="detail-line stats">
+                {{ result.score }} / {{ result.max_combo }}x <span
+                    class="purple">({{ result.beatmap_max_combo }}x)</span> { {{ result.count_300 }} / {{
+                result.count_100 }} / {{ result.count_50 }} / {{ result.count_miss }} }
+            </div>
+            <div>
+                <span class="detail-line diff">{{ result.diff_name }}</span>
+                <span class="relative-time" data-title="{{ result.time_str }}">{{ result.time_relative }}</span>
+            </div>
+        </div>
+        <div class="detail-section mods">
+            {% for mod in result.mod_list %}
+                <div class="mod mod--{{ mod }}" data-title="{{ result.mod_names[mod] }}"></div>
+            {% endfor %}
+        </div>
+        <div class="detail-section accuracy">{{ result.accuracy_str }}</div>
+        <div class="detail-section pp" data-title="{{ result.pp }}">
+            <span class="pp_value">{{ result.pp|round|int }}</span>
+            <span class="pp_unit">pp</span>
+        </div>
+        <div class="menu-btn">
+            <span class="fas fa-ellipsis-v"></span>
+            <div class="menu-options">
+                <a href="https://osu.ppy.sh/scores/osu/{{ result.replay_id }}"
+                       class="no-underline" target="_blank">
+                    <span class="menu-option">
+                        View Details
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    const menuBtns = document.querySelectorAll('.menu-btn');
+    const menuOptions = document.querySelectorAll('.menu-options');
+
+    menuBtns.forEach((menuBtn, index) => {
+      const menuOption = menuOptions[index];
+
+      menuBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        // Disable all other menu buttons
+        menuBtns.forEach((btn, i) => {
+          if (i !== index) {
+            btn.classList.remove('active');
+            menuOptions[i].classList.remove('show');
+          }
+        });
+
+        // Toggle the clicked menu button
+        menuBtn.classList.toggle('active');
+        menuOption.classList.toggle('show');
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!menuBtn.contains(event.target)) {
+          menuBtn.classList.remove('active');
+          menuOption.classList.remove('show');
+        }
+      });
+    });
+</script>
+
+{% endblock %}

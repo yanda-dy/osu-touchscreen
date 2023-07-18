@@ -1,0 +1,268 @@
+<!-- leaderboard_performance.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ map.artist }} - {{ map.song_name }} • beatmap info | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/beatmap_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="image-container">
+    <div class="beatmapset-cover"
+         style="background-image: url('https://assets.ppy.sh/beatmaps/{{ map.beatmapset_id }}/covers/cover@2x.jpg');"></div>
+    <div class="gradient-overlay"></div>
+    <div class="map-info">
+        <div class="difficulty-select">
+            {% for beatmap in beatmapset %}
+            <a class="beatmap-option{% if beatmap.beatmap_id == map.beatmap_id %} beatmap-active{% endif %}"
+               href="/beatmap?search_type=beatmapid&query={{ beatmap.beatmap_id }}" data-title="{{ beatmap.diff_name }}" data-mapper="{{ beatmap.user_id }}" data-sr="{{ '%.2f'|format(beatmap.star_rating) }}">
+                <div class="beatmap-icon--beatmapset{% if beatmap.beatmap_id == map.beatmap_id %} beatmap-active-icon{% endif %}" style="--diff: {{ beatmap.colour }};">
+                    <svg class="beatmap-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1144 1144">
+                        <path fill="currentColor"
+                              d="M572.107 1143.489c-320.02 0-571.49-251.469-571.49-571.49S252.087.509 572.107.509c320.021 0 571.49 251.469 571.49 571.49s-251.469 571.49-571.49 571.49Zm0-1034.107c-245.526 0-462.618 194.218-462.618 462.617 0 237.048 192.324 462.617 462.618 462.617 272.568 0 462.617-217.751 462.617-462.617 0-261.76-201.634-462.617-462.617-462.617Zm0 754.363c-160.012 0-291.744-131.734-291.744-291.746 0-160.012 131.732-291.745 291.744-291.745 160.011 0 291.746 131.733 291.746 291.745S732.118 863.745 572.107 863.745Z"/>
+                    </svg>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="diff-name">
+            {{ map.diff_name }}
+            <a class="diff-mapper" href="https://osu.ppy.sh/users/{{ map.user_id }}">mapper</a>
+            <span class="diff-star-rating">Star Rating {{ '%.2f'|format(map.star_rating) }}</span>
+        </div>
+        <div class="playcount-favourites">
+            <span class="fas fa-play-circle"></span>
+            <span class="playcount-value">{{ '{:,}'.format(beatmapset|sum(attribute='playcount')) }}</span>
+            <span class="fas fa-heart"></span>
+            <span class="favourite-value">{{ beatmapset[0].favouritecount_str }}</span>
+        </div>
+        <div class="map-name">
+            <a href="https://osu.ppy.sh/b/{{ map.beatmap_id }}" class="no-hover-underline">{{ map.song_name }}</a>
+        </div>
+        <div class="artist-name">
+            <a href='/beatmap/search?query="{{ map.artist|urlencode }}"&sort=ranked&order=desc' class="no-hover-underline">{{ map.artist }}</a>
+        </div>
+        <div class="mapper-name">
+            mapped by <a href="https://osu.ppy.sh/users/{{ map.creator|urlencode }}"
+                         style="font-weight: bold;" class="no-hover-underline">{{ map.creator }}</a>
+        </div>
+        <div class="last-updated">
+            {{ map.status.split('.')[1].lower() }} <span class="last-updated-text" data-title="{{ map.ranked_date_long }}">{{ map.ranked_date_str }}</span>
+        </div>
+        <div class="info-box">
+            <div class="audio-preview" onclick="toggleAudio('https://b.ppy.sh/preview/{{ map.beatmapset_id }}.mp3')">
+                <i id="audioIcon" class="fa fa-play"></i>
+            </div>
+            <div class="audio-progress">
+                <progress id="audioProgress" value="0" max="1" class="audio-progress-bar"></progress>
+            </div>
+            <div class="beatmap-stats">
+                <div class="quick-stats">
+                    <div class="quick-stat beatmap_length" data-title="Length (Drain length: {{ map.hit_length_str }})">
+                        <div class="icon-stat beatmap_length-icon"
+                             style="background-image: url('https://osu.ppy.sh/images/layout/beatmapset-page/total_length.svg');"></div>
+                        <span>{{ map.total_length_str }}</span>
+                    </div>
+                    <div class="quick-stat beatmap_bpm" data-title="BPM">
+                        <div class="icon-stat beatmap_bpm-icon"
+                             style="background-image: url('https://osu.ppy.sh/images/layout/beatmapset-page/bpm.svg');"></div>
+                        <span>{{ map.bpm }}</span>
+                    </div>
+                    <div class="quick-stat beatmap_circles" data-title="Circle Count">
+                        <div class="icon-stat beatmap_circles-icon"
+                             style="background-image: url('https://osu.ppy.sh/images/layout/beatmapset-page/count_circles.svg');"></div>
+                        <span>{{ map.circles }}</span>
+                    </div>
+                    <div class="quick-stat beatmap_sliders" data-title="Slider Count">
+                        <div class="icon-stat beatmap_sliders-icon"
+                             style="background-image: url('https://osu.ppy.sh/images/layout/beatmapset-page/count_sliders.svg');"></div>
+                        <span>{{ map.sliders }}</span>
+                    </div>
+                </div>
+                <div class="map-attributes">
+                    <div class="map-attribute circle-size">
+                        <div class="map-attribute-text">Circle Size</div>
+                        <div class="bar-full">
+                            <div class="bar-fill" style="width: {{ map.cs * 10 }}%;"></div>
+                        </div>
+                        <div class="map-attribute-value">{{ map.cs }}</div>
+                    </div>
+                    <div class="map-attribute hp-drain">
+                        <div class="map-attribute-text">HP Drain</div>
+                        <div class="bar-full">
+                            <div class="bar-fill" style="width: {{ map.hp * 10 }}%;"></div>
+                        </div>
+                        <div class="map-attribute-value">{{ map.hp }}</div>
+                    </div>
+                    <div class="map-attribute accuracy">
+                        <div class="map-attribute-text">Accuracy</div>
+                        <div class="bar-full">
+                            <div class="bar-fill" style="width: {{ map.od * 10 }}%;"></div>
+                        </div>
+                        <div class="map-attribute-value">{{ map.od }}</div>
+                    </div>
+                    <div class="map-attribute approach-rate">
+                        <div class="map-attribute-text">Approach Rate</div>
+                        <div class="bar-full">
+                            <div class="bar-fill" style="width: {{ map.ar * 10 }}%;"></div>
+                        </div>
+                        <div class="map-attribute-value">{{ map.ar }}</div>
+                    </div>
+                    <div class="map-attribute star-rating">
+                        <div class="map-attribute-text">Star Rating</div>
+                        <div class="bar-full">
+                            <div class="bar-fill"
+                                 style="width: {{ 10 * ([map.star_rating, 10]|min) }}%; background-color: #fd5;"></div>
+                        </div>
+                        <div class="map-attribute-value">{{ "%.2f"|format(map.star_rating) }}</div>
+                    </div>
+                    <div class="map-attribute success">
+                        <div class="map-attribute-text">Success Rate</div>
+                        <div class="bar-full" data-title="{{ map.passcount_str }} / {{ map.playcount_str }}">
+                            <div class="bar-fill" style="width: {{ map.pass_percent }}; background-color: #88b300;"></div>
+                        </div>
+                        <div class="map-attribute-value">{{ map.pass_percent }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="ranking-table">
+    <thead>
+    <tr>
+        <th>RANK</th>
+        <th></th>
+        <th>SCORE</th>
+        <th>ACCURACY</th>
+        <th></th>
+        <th>PLAYER</th>
+        <th>MAX COMBO</th>
+        <th>300</th>
+        <th>100</th>
+        <th>50</th>
+        <th>MISS</th>
+        <th>PP</th>
+        <th>TIME</th>
+        <th>MODS</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for result in results %}
+    <tr class="row-data" onclick="scoreRedirect({{ result[0].replay_id }})">
+        <td class="row-rank">#{{ result[0].index }}</td>
+        <td class="row-rank-image"><img src="{{ result[0].rank_link }}" class="image-rank"></td>
+        <td class="row-score">{{ result[0].score }}</td>
+        <td class="row-accuracy">{{ result[0].accuracy_str }}</td>
+        <td class="row-country" data-title="{{ result[1] }}"><img src="{{ result[2] }}" class="country-image"></td>
+        <td class="row-name">
+            <a href="/users?search_type=userid&query={{ result[0].user_id }}" class="row-name-link"
+               onclick="event.stopPropagation()">{{ result[0].username }}</a>
+        </td>
+        <td class="row-combo{% if result[0].perfect == 1 %} perfect{% endif %}">{{ '{:,}'.format(result[0].max_combo) }}x</td>
+        <td class="row-300{% if result[0].count_300 == 0 %} none{% endif %}">{{ result[0].count_300 }}</td>
+        <td class="row-100{% if result[0].count_100 == 0 %} none{% endif %}">{{ result[0].count_100 }}</td>
+        <td class="row-50{% if result[0].count_50 == 0 %} none{% endif %}">{{ result[0].count_50 }}</td>
+        <td class="row-miss{% if result[0].count_miss == 0 %} none{% endif %}">{{ result[0].count_miss }}</td>
+        <td class="row-pp">{{ result[0].pp|round(2) }}</td>
+        <td class="row-time" data-title="{{ result[0].time_str }}">{{ result[0].time_relative_short }}</td>
+        <td class="row-mods">
+            <div class="detail-section mods">
+                {% for mod in result[0].mod_list %}
+                <div class="mod mod--{{ mod }}" data-title="{{ result[0].mod_names[mod] }}"></div>
+                {% endfor %}
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function scoreRedirect(replayID) {
+        const url = `https://osu.ppy.sh/scores/osu/${replayID}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+<script>
+  let audio = null;
+  let animationFrame = null;
+
+  function toggleAudio(url) {
+    if (!audio) {
+      audio = new Audio(url);
+      audio.addEventListener('ended', resetAudio);
+      audio.addEventListener('canplaythrough', startPlayback);
+    } else if (audio.paused) {
+      audio.play();
+      document.getElementById('audioIcon').className = 'fa fa-pause';
+      animationFrame = requestAnimationFrame(updateProgress);
+    } else {
+      audio.pause();
+      document.getElementById('audioIcon').className = 'fa fa-play';
+      cancelAnimationFrame(animationFrame);
+    }
+  }
+
+  function startPlayback() {
+    if (audio) {
+      audio.play();
+      document.getElementById('audioIcon').className = 'fa fa-pause';
+      animationFrame = requestAnimationFrame(updateProgress);
+    }
+  }
+
+  function resetAudio() {
+    audio.currentTime = 0;
+    document.getElementById('audioIcon').className = 'fa fa-play';
+    document.getElementById('audioProgress').value = 0;
+    audio.pause();
+    audio = null;
+    cancelAnimationFrame(animationFrame);
+  }
+
+  function updateProgress() {
+    document.getElementById('audioProgress').value = audio.currentTime / audio.duration;
+    animationFrame = requestAnimationFrame(updateProgress);
+  }
+</script>
+
+<script>
+  // Get all the <a> tags with class "beatmap-option"
+  const beatmapOptions = document.querySelectorAll('.beatmap-option');
+
+  // Get the parent container <div> element with class "diff-name"
+  const diffNameContainer = document.querySelector('.diff-name');
+
+  // Store the original HTML content of the container
+  const diffNameContainerOrig = diffNameContainer.innerHTML;
+
+  // Attach event listeners to each beatmap option
+  beatmapOptions.forEach((option) => {
+    option.addEventListener('mouseover', () => {
+      // Retrieve the values from the data attributes
+      const diff = option.getAttribute('data-title');
+      const mapper = option.getAttribute('data-mapper');
+      const sr = option.getAttribute('data-sr');
+
+      // Generate the updated HTML content
+      const updatedHTML = `${diff}
+        <a class="diff-mapper" href="https://osu.ppy.sh/users/${mapper}">mapper</a>
+        <span class="diff-star-rating">Star Rating ${sr}</span>`;
+
+      // Update the content of the diffNameContainer
+      diffNameContainer.innerHTML = updatedHTML;
+    });
+
+    option.addEventListener('mouseout', () => {
+      // Restore the original HTML content
+      diffNameContainer.innerHTML = diffNameContainerOrig;
+    });
+  });
+</script>
+
+{% endblock %}

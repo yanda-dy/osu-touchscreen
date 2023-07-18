@@ -1,0 +1,71 @@
+<!-- home.html -->
+{% extends "base.html" %}
+
+{% block title %}update | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/update_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <!-- Add the following code to display the flash message -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% if messages[0].startswith('Success') %}
+            <div class="alert alert-success">{{ messages[0] }}</div>
+            {% else %}
+            <div class="alert alert-danger">{{ messages[0] }}</div>
+            {% endif %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="/update" method="get">
+            <div class="form-group">
+                <select class="form-control dropdown" name="search_type" id="search-type">
+                    <option value="scoreid" {% if search_type == 'scoreid' %}selected{% endif %}>Score</option>
+                    <option value="beatmapid" {% if search_type == 'beatmapid' %}selected{% endif %}>Beatmap</option>
+                    <option value="userbest" {% if search_type == 'userbest' %}selected{% endif %}>User Best</option>
+                    <option value="userrecent" {% if search_type == 'userrecent' %}selected{% endif %}>User Recent</option>
+                    <option value="beatmapuser" {% if search_type == 'beatmapuser' %}selected{% endif %}>Beatmap User</option>
+                    <!-- Add more options for different search types -->
+                </select>
+            </div>
+            <div class="form-group">
+                <div id="beatmap-main-search" style="display: block;">
+                    <input type="text" class="form-control" name="query" placeholder="Enter query"
+                   value="{{ query }}">
+                </div>
+                <div id="beatmap-secondary-search" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="beatmapid" placeholder="Enter Beatmap ID">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="userid" placeholder="Enter User ID">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const searchTypeDropdown = document.getElementById('search-type');
+const mainSearch = document.getElementById('beatmap-main-search');
+const secondarySearch = document.getElementById('beatmap-secondary-search');
+
+// Function to toggle the visibility of the beatmap user search container
+function toggleBeatmapUserSearch() {
+  secondarySearch.style.display = searchTypeDropdown.value === 'beatmapuser' ? 'block' : 'none';
+  mainSearch.style.display = searchTypeDropdown.value === 'beatmapuser' ? 'none' : 'block';
+}
+
+// Attach event listener to the search type dropdown
+searchTypeDropdown.addEventListener('change', toggleBeatmapUserSearch);
+
+// Initial call to set the initial visibility of the beatmap user search container
+toggleBeatmapUserSearch();
+</script>
+{% endblock %}

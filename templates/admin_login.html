@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/update_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <!-- Add the following code to display the flash message -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% if messages[0].startswith('Success') %}
+            <div class="alert alert-success">{{ messages[0] }}</div>
+            {% else %}
+            <div class="alert alert-danger">{{ messages[0] }}</div>
+            {% endif %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="login-form" action="{{ request.path }}" method="post">
+            <div class="form-group">
+                <label for="password">Admin Password:</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Enter admin password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/admin_login.js') }}"></script>
+
+{% endblock %}

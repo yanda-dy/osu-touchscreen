@@ -1,0 +1,121 @@
+<!-- loved.html -->
+{% extends "base.html" %}
+
+{% block title %}loved scores | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/result_styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plays_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<h1 class="mt-4 page-title">Top Plays (Loved)</h1>
+
+<!-- Add the following code to display the flash message -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-danger">
+    {{ messages[0] }}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="search-tools">
+    <form action="/loved" method="get" class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" name="rank" placeholder="Enter starting rank">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    {% for result in results %}
+    <div class="play-detail">
+        <div class="index">{{ result[0].index }}</div>
+        <div class="detail-section rank">
+            <img src="{{ result[0].rank_link }}" alt="{{ result[0].rank }}">
+        </div>
+        <div class="detail-section detail">
+            <div class="detail-line player">
+                <img src="{{ result[2] }}" class="player-country-image" data-title="{{ result[1] }}">
+                {% if result[2] == "https://raw.githubusercontent.com/ppy/osu-web/master/public/images/flags/fallback.png" %}
+                    <a href="https://osu.ppy.sh/users/{{ result[0].user_id }}">{{ result[0].username }}</a>
+                {% else %}
+                    <a href="/users?search_type=userid&query={{ result[0].user_id }}">{{ result[0].username }}</a>
+                {% endif %}
+            </div>
+            <div class="detail-line beatmap">
+                <a href="/beatmap?search_type=beatmapid&query={{ result[0].beatmap_id }}"><span
+                        class="title">{{ result[0].map_name }}</span><span
+                        class="artist"> by {{ result[0].artist }}</span></a>
+            </div>
+            <div class="detail-line stats">
+                {{ result[0].score }} / {{ result[0].max_combo }}x <span
+                    class="purple">({{ result[0].beatmap_max_combo }}x)</span> { {{ result[0].count_300 }} / {{
+                result[0].count_100 }} / {{ result[0].count_50 }} / {{ result[0].count_miss }} }
+            </div>
+            <div>
+                <span class="detail-line diff">{{ result[0].diff_name }}</span>
+                <span class="relative-time" data-title="{{ result[0].time_str }}">{{ result[0].time_relative }}</span>
+            </div>
+        </div>
+        <div class="detail-section mods">
+            {% for mod in result[0].mod_list %}
+                <div class="mod mod--{{ mod }}" data-title="{{ result[0].mod_names[mod] }}"></div>
+            {% endfor %}
+        </div>
+        <div class="detail-section accuracy">{{ result[0].accuracy_str }}</div>
+        <div class="detail-section pp" data-title="{{ result[0].pp }}">
+            <span class="pp_value">{{ result[0].pp|round|int }}</span>
+            <span class="pp_unit">pp</span>
+        </div>
+        <div class="menu-btn">
+            <span class="fas fa-ellipsis-v"></span>
+            <div class="menu-options">
+                <a href="https://osu.ppy.sh/scores/osu/{{ result[0].replay_id }}"
+                       class="no-underline" target="_blank">
+                    <span class="menu-option">
+                        View Details
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    const menuBtns = document.querySelectorAll('.menu-btn');
+    const menuOptions = document.querySelectorAll('.menu-options');
+
+    menuBtns.forEach((menuBtn, index) => {
+      const menuOption = menuOptions[index];
+
+      menuBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        // Disable all other menu buttons
+        menuBtns.forEach((btn, i) => {
+          if (i !== index) {
+            btn.classList.remove('active');
+            menuOptions[i].classList.remove('show');
+          }
+        });
+
+        // Toggle the clicked menu button
+        menuBtn.classList.toggle('active');
+        menuOption.classList.toggle('show');
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!menuBtn.contains(event.target)) {
+          menuBtn.classList.remove('active');
+          menuOption.classList.remove('show');
+        }
+      });
+    });
+</script>
+
+{% endblock %}

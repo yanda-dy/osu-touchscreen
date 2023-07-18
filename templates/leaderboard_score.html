@@ -1,0 +1,102 @@
+<!-- leaderboard_score.html -->
+{% extends "base.html" %}
+
+{% block title %}score • rankings | tdb{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="mt-4 page-title">Score Leaderboard</h1>
+
+<!-- Add the following code to display the flash message -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-danger">
+    {{ messages[0] }}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="search-tools">
+    <form action="/leaderboard/score" method="get" class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" name="rank" placeholder="Enter starting rank">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    <input type="text" class="form-control user-search" id="user-search" placeholder="Search by username"/>
+</div>
+
+<table class="ranking-table">
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Scores</th>
+        <th class="performance">Ranked Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in data %}
+    <tr class="row-data active-{{ row.is_active }}">
+        <td class="row-rank">{{ row.rank }}</td>
+        <td class="row-country" data-title="{{ row.country_name }}">
+            <img src="{{ row.country_image }}" class="country-image">
+        </td>
+        <td class="row-name">
+            <a href="/users?search_type=userid&query={{ row.user_id }}">{{ row.username }}</a>
+        </td>
+        <td class="row-count">{{ row.num_scores }}</td>
+        <td class="row-score">{{ row.net_pp }}</td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('user-search');
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchInputValue = urlParams.get('search');
+
+        if (searchInputValue && searchInputValue.length > 0) {
+            searchInput.value = decodeURIComponent(searchInputValue);
+            searchInput.focus();
+            searchInput.selectionStart = searchInput.value.length;
+            searchInput.selectionEnd = searchInput.value.length;
+        }
+    });
+
+    let timeoutId;
+
+    function handleSearchInput() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(sendSearchRequest, 300); // Debounce time set to 300 milliseconds
+    }
+
+    function sendSearchRequest() {
+        const searchQuery = sanitizeInput(searchInput.value.trim());
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('search', searchQuery);
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.location.href = newUrl;
+    }
+
+    const searchInput = document.getElementById('user-search');
+
+    searchInput.addEventListener('input', handleSearchInput);
+
+    function sanitizeInput(input) {
+        // Sanitize the input to prevent injection attacks
+        const sanitizedInput = encodeURIComponent(input);
+
+        // Additional validation or sanitization can be performed if needed
+
+        return sanitizedInput;
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,349 @@
+:root {
+  --bg-main: hsl(200, 10%, 15%);
+  --bg-main-trans: hsla(200, 10%, 15%, 0.75);
+  --bg-main-dark: hsl(200, 10%, 10%);
+  --bg-main-dark-trans: hsla(200, 10%, 10%, 0.75);
+  --navbar-main: hsl(200, 50%, 45%);
+  --navbar-active: hsl(200, 100%, 70%);
+  --scroll-track: hsl(200, 45%, 30%);
+  --scroll-thumb: hsl(200, 90%, 90%);
+  --form-focus: hsl(200, 10%, 25%);
+  --form-focus-transparent: hsla(200, 10%, 25%, 0.75);
+
+  --card-height: 110px;
+  --search-title: hsl(200, 20%, 15%);
+  --search-bar: hsl(200, 10%, 30%);
+  --search-text: hsl(200, 40%, 100%);
+  --search-glow: hsl(200, 40%, 80%);
+  --search-result: hsl(200, 40%, 75%);
+  --search-icon: hsl(200, 40%, 80%);
+  --beatmapset-main: hsl(200, 10%, 30%);
+  --beatmapset-cover: hsla(200, 10%, 30%, 0.85);
+  --beatmapset-main-hover: hsl(200, 10%, 20%);
+  --beatmapset-cover-hover: hsla(200, 10%, 20%, 0.7);
+  --beatmapset-mapper: hsl(200, 40%, 90%);
+
+  --ranked-status: hsl(90, 100%, 70%);
+  --loved-status: hsl(333, 100%, 70%);
+}
+
+body {
+    background-color: var(--bg-main-dark);
+}
+
+.navbar-osu {
+    background-color: var(--navbar-main);
+}
+
+.active-link {
+    position: relative;
+}
+
+.active-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 3px;
+    background-color: var(--navbar-active);
+    border-radius: 4px;
+}
+
+.search-container {
+  width: 100%;
+  background-color: var(--bg-main);
+  margin: auto;
+}
+
+.search-title {
+  background-color: var(--search-title);
+  padding: 10px 50px;
+  font-size: 18px;
+  color: var(--search-text);
+}
+
+.beatmap-listing-image {
+  width: 35px;
+  margin-right: 10px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  padding: 20px 40px;
+  border: none;
+  background-color: var(--row-data);
+  width: 100%;
+  height: 200px;
+  background-image: linear-gradient(hsla(200, 10%, 20%, 0.9), hsla(200, 10%, 20%, 0.9)), var(--search-box-bg);
+  background-position: -50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  vertical-align: center;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 15px;
+  padding-right: 45px;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  background-color: var(--search-bar);
+  color: var(--search-text);
+  border: 1px solid var(--beatmapset-main-hover);
+}
+.search-input::placeholder {
+  color: inherit;
+  opacity: 0.54;
+}
+
+.search-input:focus {
+  border: 1px solid var(--search-text);
+  box-shadow: 0 0 10px var(--search-glow);
+}
+
+.search-icon {
+  transform: translate(-35px, 0);
+  color: var(--search-icon);
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  width: 0;
+}
+
+.sort-options {
+  display: flex;
+  background-color: var(--beatmapset-main-hover);
+  height: 50px;
+  width: 100%;
+  align-items: center;
+  color: white;
+  font-size: 12px;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.sort-by {
+  padding-right: 20px;
+}
+
+.sort-button {
+  background-color: var(--beatmapset-main-hover);
+  border: none;
+  color: white;
+  font-size: 12px;
+  padding: 7px 14px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+.sort-button:hover {
+  background-color: var(--beatmapset-main);
+}
+.selected,
+.sort-button:focus {
+  background-color: var(--beatmapset-main);
+  border: none;
+  outline: none;
+  color: var(--search-glow);
+}
+
+.order-direction {
+  color: transparent;
+}
+.selected .order-direction {
+  color: var(--search-glow);
+}
+
+.search-results {
+  padding: 15px 25px 0 25px;
+  width: 100%;
+  background-color: var(--bg-main);
+}
+
+.col-md-6 {
+  padding: 0;
+  margin: 0;
+}
+
+.beatmapset-card-container {
+  cursor: pointer;
+  padding: 0px 10px 3px 10px;
+}
+
+.left-card {
+  width: 23%;
+  height: var(--card-height);
+  float: left;
+  background-size: cover;
+  vertical-align: middle;
+  border-radius: 10px 0 0 10px;
+  background-image: var(--left-card-url), url("https://osu.ppy.sh/assets/images/default-bg.7594e945.png");
+}
+
+.beatmapset-card {
+  width: 77%;
+  float: left;
+  border-radius: 0 10px 10px 0;
+  background-position: 50%;
+  background-size: cover;
+  vertical-align: middle;
+  background-image: var(--beatmapset-card-url), url("https://osu.ppy.sh/assets/images/default-bg@2x.4043b8f4.png");
+  margin-bottom: 10px;
+}
+
+.beatmapset-description {
+  background: linear-gradient(to right, var(--beatmapset-main) 0%, var(--beatmapset-cover) 50%);
+  height: var(--card-height);
+  border-radius: 10px;
+  color: white;
+  padding: 10px 12px;
+  margin: 0 0 0 -10px;
+  font-weight: bold;
+  box-shadow:inset -12px 0px var(--beatmapset-main-hover);
+  transition: ease all 150ms;
+}
+.beatmapset-description:hover {
+  background: linear-gradient(to right, var(--beatmapset-main-hover) 0%, var(--beatmapset-cover-hover) 100%);
+  box-shadow:inset -30px 0px var(--beatmapset-main-hover);
+  padding-right: 45px;
+}
+
+.beatmapset-title {
+  font-size: 17px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 3px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.75);
+}
+.beatmapset-artist {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 5px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.75);
+}
+.beatmapset-mapper {
+  font-size: 11px;
+  color: var(--beatmapset-mapper);
+}
+.beatmapset-mapper-link {
+  color: var(--search-result);
+}
+
+.beatmapset-stats {
+  padding-top: 4px;
+  font-size: 11px;
+  font-weight: 300;
+  opacity: 0;
+}
+
+.beatmapset-stats-section {
+  padding-right: 10px;
+  position: relative;
+}
+.beatmapset-stats-section::after {
+  content: attr(data-title);
+  font-size: 11px;
+  font-weight: bold;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(3%);
+  background-color: black;
+  color: #fff;
+  padding: 8px 20px 6px 20px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;
+  z-index: 727;
+}
+.beatmapset-stats-section:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+.beatmapset-stats-section::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-55%) translateY(-56.2%);
+  margin-left: -5px;
+  border-width: 7px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;
+  z-index: 727;
+}
+.beatmapset-stats-section:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.beatmapset-stats-icon {
+  color: var(--beatmapset-mapper);
+  font-size: 11px;
+}
+
+.difficulty-list {
+  padding-top: 3px;
+  padding-bottom: 5px;
+  align-items: center;
+}
+
+.status-approved,
+.status-ranked {
+  font-family: Lato;
+  font-size: 11px;
+  font-weight: 800;
+  height: 100%;
+  border-radius: 10000px;
+  background-color: var(--ranked-status);
+  padding: 0 5px;
+  color: var(--beatmapset-main);
+}
+
+.status-loved {
+  font-family: Lato;
+  font-size: 11px;
+  font-weight: bold;
+  height: 100%;
+  border-radius: 10000px;
+  background-color: var(--loved-status);
+  padding: 0 5px;
+  color: var(--beatmapset-main);
+}
+
+.beatmap-icon {
+  width: 15px;
+  margin-left: 3px;
+  margin-right: 5px;
+  transform: translateY(-0.3px);
+}
+
+.beatmap-option {
+  font-size: 7px;
+  color: var(--diff);
+  width: 0;
+  border-radius: 10000px;
+  border: 3.5px solid var(--diff);
+  margin-left: 1px;
+}
+
+.beatmap-overflow {
+  font-size: 10px;
+  color: white;
+  padding-left: 2px;
+}
+
+.difficulty-list {
+  display: flex;
+}
